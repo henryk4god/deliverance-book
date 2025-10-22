@@ -3,13 +3,13 @@ const BOOK_CONFIG = {
     title: "Breaking Generational Chains",
     author: "Spiritual Breakthrough Ministry",
     chapters: [
-        { title: "Table of Contents", file: "content/toc.md" },
-        { title: "Chapter 1: Identifying Ancestral Patterns and Spiritual Strongholds", file: "content/chapter1.md" },
-        { title: "Chapter 2: Biblical Foundation and Spiritual Authority", file: "content/chapter2.md" },
-        { title: "Chapter 3: Fasting and Prayer Protocols for Breakthrough", file: "content/chapter3.md" },
-        { title: "Chapter 4: Deliverance Techniques and Spiritual Warfare", file: "content/chapter4.md" },
-        { title: "Chapter 5: Building Spiritual Protection Systems", file: "content/chapter5.md" },
-        { title: "Chapter 6: Establishing Generational Blessings", file: "content/chapter6.md" }
+        { title: "Table of Contents", file: "./content/toc.md" },
+        { title: "Chapter 1: Identifying Ancestral Patterns and Spiritual Strongholds", file: "./content/chapter1.md" },
+        { title: "Chapter 2: Biblical Foundation and Spiritual Authority", file: "./content/chapter2.md" },
+        { title: "Chapter 3: Fasting and Prayer Protocols for Breakthrough", file: "./content/chapter3.md" },
+        { title: "Chapter 4: Deliverance Techniques and Spiritual Warfare", file: "./content/chapter4.md" },
+        { title: "Chapter 5: Building Spiritual Protection Systems", file: "./content/chapter5.md" },
+        { title: "Chapter 6: Establishing Generational Blessings", file: "./content/chapter6.md" }
     ]
 };
 
@@ -76,7 +76,7 @@ function loadChaptersList() {
     });
 }
 
-// Load chapter content
+// Load chapter content from markdown files
 async function loadChapter(chapterIndex) {
     if (chapterIndex < 0 || chapterIndex >= BOOK_CONFIG.chapters.length) return;
     
@@ -93,12 +93,10 @@ async function loadChapter(chapterIndex) {
     
     // Show loading state
     elements.chapterTitle.textContent = BOOK_CONFIG.chapters[chapterIndex].title;
-    elements.chapterContent.innerHTML = '<div class="loading">Loading chapter...</div>';
+    elements.chapterContent.innerHTML = '<div class="loading">Loading chapter content...</div>';
     
     try {
-        // In a real implementation, you would fetch the markdown file
-        // For this demo, we'll use the content from your PDF
-        const content = await getChapterContent(chapterIndex);
+        const content = await fetchChapterContent(chapterIndex);
         const htmlContent = marked.parse(content);
         elements.chapterContent.innerHTML = htmlContent;
         
@@ -113,25 +111,56 @@ async function loadChapter(chapterIndex) {
         
     } catch (error) {
         console.error('Error loading chapter:', error);
-        elements.chapterContent.innerHTML = '<div class="error">Error loading chapter content.</div>';
+        elements.chapterContent.innerHTML = `
+            <div class="error">
+                <h3>Error loading chapter content</h3>
+                <p>The chapter file could not be loaded. Please check if all markdown files are properly deployed.</p>
+                <p>Error details: ${error.message}</p>
+            </div>
+        `;
     }
 }
 
-// Get chapter content (mock implementation)
-async function getChapterContent(chapterIndex) {
-    // This is where you would normally fetch from markdown files
-    // For this demo, we'll return sample content based on chapter
-    const chapterTitles = {
-        0: "# TABLE OF CONTENTS\n\n" + BOOK_CONFIG.chapters.map((ch, i) => `${i}. ${ch.title}`).join('\n'),
-        1: `# ${BOOK_CONFIG.chapters[1].title}\n\n**Introduction: The Hidden Chains That Bind**\n\nHave you ever wondered why certain negative patterns seem to repeat in your family line? Why does addiction plague generation after generation? Why do financial struggles, broken relationships, or chronic health issues appear to follow your bloodline like an unwelcome inheritance?\n\nYou're not alone in asking these questions. Millions of believers worldwide have discovered that some of life's most persistent challenges aren't just personal failures or bad luck—they're manifestations of generational patterns and spiritual strongholds that have been passed down through family lines.`,
-        2: `# ${BOOK_CONFIG.chapters[2].title}\n\n**Introduction: Your Legal Right to Freedom**\n\nIn Chapter 1, you identified the generational patterns and spiritual strongholds affecting your family line. Now comes the next crucial step: understanding your biblical authority to break these chains and claim your spiritual inheritance.\n\nMany believers struggle with generational issues not because they lack faith, but because they don't understand their legal position in Christ.`,
-        3: `# ${BOOK_CONFIG.chapters[3].title}\n\n**Introduction: The Power Keys to Breakthrough**\n\nYou've identified the generational strongholds affecting your family (Chapter 1) and established your biblical authority to break them (Chapter 2). Now it's time to engage the most powerful breakthrough tools available to believers: strategic fasting combined with targeted prayer.`,
-        4: `# ${BOOK_CONFIG.chapters[4].title}\n\n**Introduction: Taking Territory by Force**\n\nYou've identified generational strongholds (Chapter 1), established your spiritual authority (Chapter 2), and weakened demonic resistance through fasting and prayer (Chapter 3). Now it's time for direct confrontation—the strategic application of deliverance techniques and spiritual warfare.`,
-        5: `# ${BOOK_CONFIG.chapters[5].title}\n\n**Introduction: Securing Your Victory**\n\nYou've successfully identified generational strongholds (Chapter 1), established your spiritual authority (Chapter 2), weakened demonic resistance through fasting and prayer (Chapter 3), and removed demonic forces through deliverance (Chapter 4).`,
-        6: `# ${BOOK_CONFIG.chapters[6].title}\n\n**Introduction: From Breakthrough to Legacy**\n\nYou've done the hard work. You've identified the ancestral patterns and spiritual strongholds. You've established your biblical authority and learned to operate in spiritual warfare. You've implemented fasting and prayer protocols, engaged in deliverance techniques, and built comprehensive spiritual protection systems.\n\nNow comes the most exciting phase of your journey: establishing generational blessings that will impact not only your own life but the lives of your children, grandchildren, and generations yet to come.`
+// Fetch chapter content from markdown files
+async function fetchChapterContent(chapterIndex) {
+    const chapterFile = BOOK_CONFIG.chapters[chapterIndex].file;
+    
+    try {
+        const response = await fetch(chapterFile);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const content = await response.text();
+        return content;
+    } catch (error) {
+        console.error(`Failed to fetch ${chapterFile}:`, error);
+        
+        // Fallback to sample content if files aren't found
+        return getSampleContent(chapterIndex);
+    }
+}
+
+// Sample content fallback
+function getSampleContent(chapterIndex) {
+    const samples = {
+        0: `# TABLE OF CONTENTS\n\n## BREAKING GENERATIONAL CHAINS\n\n### Chapters:\n\n1. Identifying Ancestral Patterns and Spiritual Strongholds\n2. Biblical Foundation and Spiritual Authority  \n3. Fasting and Prayer Protocols for Breakthrough\n4. Deliverance Techniques and Spiritual Warfare\n5. Building Spiritual Protection Systems\n6. Establishing Generational Blessings\n\n---\n\n*Select a chapter from the menu to begin your breakthrough journey.*`,
+        
+        1: `# CHAPTER 1: IDENTIFYING ANCESTRAL PATTERNS AND SPIRITUAL STRONGHOLDS\n\n*Content loading... If you see this message, the chapter markdown file may not be properly deployed.*`,
+        
+        2: `# CHAPTER 2: BIBLICAL FOUNDATION AND SPIRITUAL AUTHORITY\n\n*Content loading... Please check the markdown file deployment.*`,
+        
+        3: `# CHAPTER 3: FASTING AND PRAYER PROTOCOLS FOR BREAKTHROUGH\n\n*Content loading... Ensure all chapter files are in the content folder.*`,
+        
+        4: `# CHAPTER 4: DELIVERANCE TECHNIQUES AND SPIRITUAL WARFARE\n\n*Content loading... Markdown files should be in the /content/ directory.*`,
+        
+        5: `# CHAPTER 5: BUILDING SPIRITUAL PROTECTION SYSTEMS\n\n*Content loading... Check GitHub Pages deployment settings.*`,
+        
+        6: `# CHAPTER 6: ESTABLISHING GENERATIONAL BLESSINGS\n\n*Content loading... Verify all files are committed and pushed to GitHub.*`
     };
     
-    return chapterTitles[chapterIndex] || '# Chapter Content\n\nContent would be loaded from markdown file.';
+    return samples[chapterIndex] || '# Chapter Content\n\nContent would be loaded from markdown file.';
 }
 
 // Update reading progress
@@ -313,24 +342,12 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
-// Service Worker Registration for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('SW registered: ', registration);
-      })
-      .catch((registrationError) => {
-        console.log('SW registration failed: ', registrationError);
-      });
-  });
-}
 
 // Handle online/offline status
 window.addEventListener('online', () => {
-  document.documentElement.classList.remove('offline');
+    document.documentElement.classList.remove('offline');
 });
 
 window.addEventListener('offline', () => {
-  document.documentElement.classList.add('offline');
+    document.documentElement.classList.add('offline');
 });
