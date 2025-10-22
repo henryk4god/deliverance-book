@@ -1,0 +1,23 @@
+{
+  "name": "Breaking Generational Chains",
+  "short_name": "GenerationalChains",
+  "description": "A Complete Guide to Freedom from Ancestral Patterns and Spiritual Strongholds",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f9fb",
+  "theme_color": "#5c6bc0",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["books", "education", "religion"]
+}
