@@ -313,3 +313,24 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
+// Service Worker Registration for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
+
+// Handle online/offline status
+window.addEventListener('online', () => {
+  document.documentElement.classList.remove('offline');
+});
+
+window.addEventListener('offline', () => {
+  document.documentElement.classList.add('offline');
+});
