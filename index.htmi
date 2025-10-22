@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="offline-indicator">
+  ⚠️ You are currently offline. Some features may be limited.
+</div>
     <!-- Landing Page -->
     <div id="landing-page" class="page active">
         <div class="landing-container">
