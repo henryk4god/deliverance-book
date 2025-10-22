@@ -535,3 +535,21 @@ body {
 .offline .reader-header {
   margin-top: 40px;
     }
+/* Add to your existing CSS */
+.loading, .error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.error {
+    background: #ffe6e6;
+    border: 1px solid #ff6b6b;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.error h3 {
+    color: #d63031;
+    margin-bottom: 1rem;
+}
